@@ -1,6 +1,4 @@
 secrets/*
 .vscode/*
 
-a.out
-
-G*
+**/a.out
