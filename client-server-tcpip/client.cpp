@@ -1,3 +1,5 @@
+#define BUF (4096)
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,6 +7,11 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
+#include <string.h>
+
+#include <iostream>
+#include <string>
+using namespace std;
 
 void end(char *message)
 {
@@ -12,32 +19,39 @@ void end(char *message)
 	exit(0);
 }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-	if(argc < 3) 
+	if (argc < 4)
 	{
-		printf("Usage: %s <server-hostname> <port>", argv[0]);
+		printf("Usage: %s <server-ip> <port> <fileName>\n", argv[0]);
 		return 0;
 	}
-	
+
 	struct sockaddr_in server;
-	
+
 	server.sin_family = AF_INET;
 	server.sin_addr.s_addr = inet_addr(argv[1]);
-	server.sin_port = atoi(argv[2]);
+	server.sin_port = htons(atoi(argv[2]));
 
 	int sock = socket(AF_INET, SOCK_STREAM, 0);
-	if(sock < 0) end("ERROR: could not create socket.");
+	if (sock < 0)
+		end("ERROR: could not create socket.\n");
 
-	if(connect(sock, (struct sockaddr *)&server, sizeof(server)) < 0)
-		end("ERROR: could not connect to the server.");
-	
-	printf("Connected to server at %s:%s.", argv[1], argv[2]);
+	if (connect(sock, (struct sockaddr *)&server, sizeof(server)) < 0)
+		end("ERROR: could not connect to the server.\n");
+	else
+		printf("Connected to server at %s:%s\n", argv[1], argv[2]);
 
-	char buffer[100];
-	int n = read(sock, buffer, 100);
-	
-	if(n < 0) end("ERROR: reading on socket.");
-	
-	printf("Message from server: %s", buffer); 			
+	write(sock, argv[3], strlen(argv[3]));
+
+	char buffer[BUF];
+	strcpy(buffer, "");
+	int n = read(sock, buffer, BUF - 1);
+
+	if (n < 0)
+		end("ERROR: reading on socket.\n");
+
+	printf("Received data: \n%s\n", buffer);
+
+	close(sock);
 }
