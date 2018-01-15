@@ -1,6 +1,7 @@
 secrets/*
-.vscode/*
+**/.vscode/*
 
 a.out
 
-G*
+**/*.out
+**/*.in
