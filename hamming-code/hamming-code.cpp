@@ -91,8 +91,7 @@ int main(int argc, char **argv)
     }
     else if (choice != -1)
     {
-        if (choice >= 1 && choice <= 11)
-            code = introduceError(code, choice);
+        code = introduceError(code, choice);
 
         cout << "Code now is: ";
         printCode(code);
