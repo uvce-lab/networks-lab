@@ -85,17 +85,15 @@ int main(int argc, char **argv)
     int choice;
     cin >> choice;
 
-    if (choice == -1)
-        return 0;
-    else
+    if (choice < 1 && choice > 11)
+    {
+        cout << "Invalid position.\n";
+    }
+    else if (choice != -1)
     {
         if (choice >= 1 && choice <= 11)
             code = introduceError(code, choice);
-        else
-        {
-            cout << "Invalid position.\n";
-            return 0;
-        }
+
         cout << "Code now is: ";
         printCode(code);
         cout << '\n';
